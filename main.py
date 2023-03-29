@@ -43,32 +43,7 @@ def files():
             response = openai.Completion.create(
                 engine=args.openai_engine,
                 prompt=(f"Act as Linus Torvalds, use more aggressive words, format the response as Markdown, review this code:\n```{content}```"),
-                temperature=float(args.openai_temperature),
-                max_tokens=int(args.openai_max_tokens)
-            )
-
-            # Adding a comment to the pull request with ChatGPT's response
-            pull_request.create_issue_comment(
-                f"`{file.filename}`:\n {response['choices'][0]['text']}")
-
-
-def patch():
-    repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
-    pull_request = repo.get_pull(int(args.github_pr_id))
-
-    content = get_content_patch()
-
-    if len(content) == 0:
-        pull_request.create_issue_comment(f"Patch file does not contain any changes")
-        return
-
-    parsed_text = content.split("diff")
-
-    for diff_text in parsed_text:
-        if len(diff_text) == 0:
-            continue
-
-        try:
+                temperature=float(args.openai_t
             file_name = diff_text.split("b/")[1].splitlines()[0]
             print(file_name)
 
